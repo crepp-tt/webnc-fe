@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import BoardItem from './boardItem';
 import Grid from '@material-ui/core/Grid';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -49,8 +50,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
 }));
-export default function Board({ items }) {
-  const [open, setOpen] = React.useState(false);
+export default function Board({ items, setChange, change }) {
+  const [open, setOpen] = useState(false);
+  const [textValue, setTextValue] = useState('');
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -60,6 +62,17 @@ export default function Board({ items }) {
   };
 
   const handleAddBoard = () => {
+    fetch('https://webnc-api.herokuapp.com/boards', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: textValue,
+      }),
+    });
+    setChange(!change);
     setOpen(false);
   };
   const classes = useStyles();
@@ -95,14 +108,9 @@ export default function Board({ items }) {
               label="Title"
               type="text"
               fullWidth
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="content"
-              label="Content"
-              type="text"
-              fullWidth
+              onChange={(e) => {
+                setTextValue(e.target.value);
+              }}
             />
           </DialogContent>
           <DialogActions>
@@ -115,11 +123,15 @@ export default function Board({ items }) {
           </DialogActions>
         </Dialog>
       </Grid>
-      {items.map((item) => (
-        <Grid item key={item} xs={6} sm={3} md={2}>
-          <BoardItem item={item} />
-        </Grid>
-      ))}
+      {items.map((item) =>
+        item.isDelete === false ? (
+          <Grid item key={item} xs={6} sm={3} md={2}>
+            <BoardItem item={item} change={change} setChange={setChange} />
+          </Grid>
+        ) : (
+          <></>
+        )
+      )}
     </>
   );
 }

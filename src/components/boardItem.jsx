@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BoardItem({ item }) {
+export default function BoardItem({ item, change, setChange }) {
   const classes = useStyles();
   let date = new Date(item.createAt);
   const monthNames = [
@@ -65,6 +65,14 @@ export default function BoardItem({ item }) {
     'November',
     'December',
   ];
+
+  const handleDeleteBoard = () => {
+    console.log(item._id);
+    fetch('https://webnc-api.herokuapp.com/boards/' + item._id, {
+      method: 'DELETE',
+    });
+    setChange(!change);
+  };
 
   return (
     <Card className={classes.card}>
@@ -92,7 +100,7 @@ export default function BoardItem({ item }) {
           <FileCopyIcon />
           URL
         </Button>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={handleDeleteBoard}>
           <DeleteForeverIcon />
           Delete
         </Button>

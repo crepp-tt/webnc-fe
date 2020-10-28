@@ -57,6 +57,7 @@ export default function Album() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
+  const [change, setChange] = useState(true);
 
   useEffect(() => {
     fetch('https://webnc-api.herokuapp.com/boards')
@@ -74,7 +75,7 @@ export default function Album() {
           setError(error);
         }
       );
-  }, []);
+  }, [change]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -132,13 +133,10 @@ export default function Album() {
           </div>
           <Container className={classes.cardGrid} maxWidth="xl">
             <Grid container spacing={3}>
-              <Board items={items} />
+              <Board items={items} setChange={setChange} change={change} />
             </Grid>
           </Container>
         </main>
-        {/* Footer */}
-
-        {/* End footer */}
       </React.Fragment>
     );
   }
