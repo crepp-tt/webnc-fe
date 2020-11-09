@@ -11,6 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -53,6 +54,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Board({ items, setChange, change }) {
   const [open, setOpen] = useState(false);
   const [textValue, setTextValue] = useState('');
+  const history = useHistory();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -62,15 +65,22 @@ export default function Board({ items, setChange, change }) {
   };
 
   const handleAddBoard = () => {
-    fetch('https://webnc-api.herokuapp.com/boards', {
+    fetch('http://localhost:3000/api/boards', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        token: localStorage.getItem('token'),
       },
       body: JSON.stringify({
         title: textValue,
       }),
+    }).then((res) => {
+      if (res.status === 201) {
+        res
+          .json()
+          .then((data) => history.push('/boards/board-detail/' + data._id));
+      }
     });
     setChange(!change);
     setOpen(false);
@@ -123,15 +133,17 @@ export default function Board({ items, setChange, change }) {
           </DialogActions>
         </Dialog>
       </Grid>
-      {items.map((item) =>
-        item.isDelete === false ? (
-          <Grid item key={item} xs={6} sm={3} md={2}>
-            <BoardItem item={item} change={change} setChange={setChange} />
-          </Grid>
-        ) : (
-          <></>
-        )
-      )}
+      {items
+        ? items.map((item) =>
+            item.isDelete === false ? (
+              <Grid item key={item} xs={6} sm={3} md={2}>
+                <BoardItem item={item} change={change} setChange={setChange} />
+              </Grid>
+            ) : (
+              <></>
+            )
+          )
+        : null}
     </>
   );
 }

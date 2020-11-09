@@ -17,7 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   card: {
     height: '100%',
@@ -50,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BoardItem({ item, change, setChange }) {
   const classes = useStyles();
+  const history = useHistory();
+
   let date = new Date(item.createAt);
   const monthNames = [
     'January',
@@ -67,16 +69,22 @@ export default function BoardItem({ item, change, setChange }) {
   ];
 
   const handleDeleteBoard = () => {
-    console.log(item._id);
-    fetch('https://webnc-api.herokuapp.com/boards/' + item._id, {
+    fetch('http://localhost:3000/api/boards/' + item._id, {
       method: 'DELETE',
+      headers: {
+        token: localStorage.getItem('token'),
+      },
     });
     setChange(!change);
   };
 
+  const handleOnClick = () => {
+    history.push('/boards/board-detail/' + item._id);
+  };
+
   return (
     <Card className={classes.card}>
-      <CardContent className={classes.cardContent}>
+      <CardContent className={classes.cardContent} onClick={handleOnClick}>
         <Box gutterBottom variant="h6" component="h3" color="#646e66">
           {item.title}
         </Box>
@@ -88,7 +96,7 @@ export default function BoardItem({ item, change, setChange }) {
             </span>
 
             <span className={classes.cardNumber}>
-              {item.totalCards > 0 ? item.totalCards + ' cards' : ''}
+              {item.totalCards > 1 ? item.totalCards + ' cards' : ''}
             </span>
           </div>
         </Box>
