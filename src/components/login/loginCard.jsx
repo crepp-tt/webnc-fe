@@ -44,7 +44,7 @@ export default function RegisterCard() {
   const history = useHistory();
 
   const responseGoogle = (response) => {
-    fetch('http://localhost:3000/api/auth/logingg', {
+    fetch('https://webnc-api.herokuapp.com/api/auth/logingg', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -74,7 +74,7 @@ export default function RegisterCard() {
 
   const responseFacebook = (response) => {
     console.log(response);
-    fetch('http://localhost:3000/api/auth/loginfb', {
+    fetch('https://webnc-api.herokuapp.com/api/auth/loginfb', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
