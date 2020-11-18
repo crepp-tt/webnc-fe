@@ -64,7 +64,7 @@ export default function Board({ items, setChange, change }) {
   };
 
   const handleAddBoard = () => {
-    fetch('http://localhost:3000/api/boards', {
+    fetch('https://webnc-api.herokuapp.com/api/boards', {
       method: 'POST',
       headers: {
         Accept: 'application/json',

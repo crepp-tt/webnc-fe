@@ -72,7 +72,7 @@ export default function BoardItem({ item, change, setChange }) {
   ];
 
   const handleDeleteBoard = () => {
-    fetch('http://localhost:3000/api/boards/' + item._id, {
+    fetch('https://webnc-api.herokuapp.com/api/boards/' + item._id, {
       method: 'DELETE',
       headers: {
         token: localStorage.getItem('token'),
@@ -88,16 +88,19 @@ export default function BoardItem({ item, change, setChange }) {
   const handleEditTitle = () => {
     item.title = textValue;
     setItem2(item);
-    fetch('http://localhost:3000/api/boards/board-detail/' + item._id, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        board: item2,
-      }),
-    });
+    fetch(
+      'https://webnc-api.herokuapp.com/api/boards/board-detail/' + item._id,
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          board: item2,
+        }),
+      }
+    );
     setOpen(false);
   };
 
