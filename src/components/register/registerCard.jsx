@@ -39,7 +39,7 @@ export default function RegisterCard() {
   const [alert, setAlert] = useState(null);
 
   const handleRegister = () => {
-    fetch('http://localhost:3000/api/auth/register', {
+    fetch('https://webnc-api.herokuapp.com/api/auth/register', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
