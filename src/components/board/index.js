@@ -57,7 +57,7 @@ export default function Home() {
   const [change, setChange] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/boards', {
+    fetch('https://webnc-api.herokuapp.com/api/boards', {
       method: 'GET',
       headers: {
         token: localStorage.getItem('token'),

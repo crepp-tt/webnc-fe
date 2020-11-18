@@ -96,7 +96,7 @@ export default function BoardDetail() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/boards/board-detail/' + id)
+    fetch('https://webnc-api.herokuapp.com/api/boards/board-detail/' + id)
       .then((res) => res.json())
       .then(
         (result) => {

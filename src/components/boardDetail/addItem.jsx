@@ -63,7 +63,7 @@ export default function AddItem({ type, item, setItem, id }) {
       cloneItem[type].push(text);
       setItem(cloneItem);
       setExists(false);
-      fetch('http://localhost:3000/api/boards/board-detail/' + id, {
+      fetch('https://webnc-api.herokuapp.com/api/boards/board-detail/' + id, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

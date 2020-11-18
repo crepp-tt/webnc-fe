@@ -63,7 +63,7 @@ export default function Header() {
   };
 
   const handleSaveProfile = () => {
-    fetch('http://localhost:3000/api/users/change-profile', {
+    fetch('https://webnc-api.herokuapp.com/api/users/change-profile', {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
