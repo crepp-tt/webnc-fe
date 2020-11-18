@@ -127,7 +127,9 @@ export default function BoardItem({ item, change, setChange }) {
 
       <CardActions className={classes.info}>
         <CopyToClipboard
-          text={'http://localhost:3001/boards/board-detail/' + item._id}
+          text={
+            'https://webnc-api.herokuapp.com/boards/board-detail/' + item._id
+          }
         >
           <Button size="small" color="primary">
             <FileCopyIcon />
