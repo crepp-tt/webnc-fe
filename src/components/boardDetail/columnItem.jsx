@@ -60,7 +60,7 @@ export default function ColumnItem({ content, type, item, setItem, id }) {
     const cloneItem = { ...item };
     cloneItem[type].splice(index, 1);
     setItem(cloneItem);
-    fetch('http://localhost:3000/api/boards/board-detail/' + id, {
+    fetch('https://webnc-api.herokuapp.com/api/boards/board-detail/' + id, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -77,7 +77,7 @@ export default function ColumnItem({ content, type, item, setItem, id }) {
     const cloneItem = { ...item };
     cloneItem[type][index] = text;
     setItem(cloneItem);
-    fetch('http://localhost:3000/api/boards/board-detail/' + id, {
+    fetch('https://webnc-api.herokuapp.com/api/boards/board-detail/' + id, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
