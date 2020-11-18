@@ -56,6 +56,7 @@ export default function AddItem({ type, item, setItem, id }) {
   const classes = useStyles();
   const [exists, setExists] = useState(true);
   const [text, setText] = useState('');
+
   const handleAddItem = () => {
     if (text.trim() !== '') {
       const cloneItem = { ...item };

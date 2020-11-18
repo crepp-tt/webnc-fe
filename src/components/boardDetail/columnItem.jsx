@@ -5,6 +5,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
+import Pusher from 'pusher-js';
 
 const useStyles = makeStyles((theme) => ({
   icon: {

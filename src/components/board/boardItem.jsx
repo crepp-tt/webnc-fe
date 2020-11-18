@@ -1,23 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-// import AppBar from '@material-ui/core/AppBar';
-// import CameraIcon from '@material-ui/icons/PhotoCamera';
-// import CardMedia from '@material-ui/core/CardMedia';
-// import CssBaseline from '@material-ui/core/CssBaseline';
-// import Grid from '@material-ui/core/Grid';
-// import Toolbar from '@material-ui/core/Toolbar';
-// import Typography from '@material-ui/core/Typography';
-// import Link from '@material-ui/core/Link';
-// import Container from '@material-ui/core/Container';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import Edit from '@material-ui/icons/Edit';
+
 import { useHistory } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 const useStyles = makeStyles((theme) => ({
   card: {
     height: '100%',
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '12px',
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     color: '#95a399',
   },
   time: {
@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
 export default function BoardItem({ item, change, setChange }) {
   const classes = useStyles();
   const history = useHistory();
+  const [open, setOpen] = useState(false);
+  const [textValue, setTextValue] = useState(item.title);
+  const [item2, setItem2] = useState(item);
 
   let date = new Date(item.createAt);
   const monthNames = [
@@ -82,11 +85,27 @@ export default function BoardItem({ item, change, setChange }) {
     history.push('/boards/board-detail/' + item._id);
   };
 
+  const handleEditTitle = () => {
+    item.title = textValue;
+    setItem2(item);
+    fetch('http://localhost:3000/api/boards/board-detail/' + item._id, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        board: item2,
+      }),
+    });
+    setOpen(false);
+  };
+
   return (
     <Card className={classes.card}>
       <CardContent className={classes.cardContent} onClick={handleOnClick}>
         <Box gutterBottom variant="h6" component="h3" color="#646e66">
-          {item.title}
+          {item2.title}
         </Box>
         <Box>
           <div className={classes.info}>
@@ -104,14 +123,52 @@ export default function BoardItem({ item, change, setChange }) {
       </CardContent>
 
       <CardActions className={classes.info}>
-        <Button size="small" color="primary">
-          <FileCopyIcon />
-          URL
-        </Button>
+        <CopyToClipboard
+          text={'http://localhost:3001/boards/board-detail/' + item._id}
+        >
+          <Button size="small" color="primary">
+            <FileCopyIcon />
+          </Button>
+        </CopyToClipboard>
+
         <Button size="small" color="primary" onClick={handleDeleteBoard}>
           <DeleteForeverIcon />
-          Delete
         </Button>
+
+        <Button size="small" color="primary" onClick={() => setOpen(true)}>
+          <Edit />
+        </Button>
+        <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+          aria-labelledby="form-dialog-title"
+          maxWidth="sm"
+          fullWidth={true}
+        >
+          <DialogTitle id="form-dialog-title">Add new board</DialogTitle>
+          <DialogContent>
+            <TextField
+              defaultValue={item.title}
+              autoFocus
+              margin="dense"
+              id="title"
+              label="Title"
+              type="text"
+              fullWidth
+              onChange={(e) => {
+                setTextValue(e.target.value);
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleEditTitle} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
       </CardActions>
     </Card>
   );

@@ -1,20 +1,13 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Board from './board';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-import { Avatar } from '@material-ui/core';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import { withStyles } from '@material-ui/core/styles';
+import Header from '../header';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -56,41 +49,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    {...props}
-  />
-));
-
 export default function Home() {
   const classes = useStyles();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [change, setChange] = useState(true);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   useEffect(() => {
     fetch('http://localhost:3000/api/boards', {
@@ -106,9 +70,7 @@ export default function Home() {
           setIsLoaded(true);
           setItems(result);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
+
         (error) => {
           setIsLoaded(true);
           setError(error);
@@ -124,29 +86,7 @@ export default function Home() {
     return (
       <React.Fragment>
         <CssBaseline />
-        <AppBar position="relative">
-          <Toolbar className={classes.bar}>
-            <Button color="inherit">
-              <h3>Funretro</h3>
-            </Button>
-            <Avatar
-              alt="Remy Sharp"
-              src="/static/images/avatar/1.jpg"
-              onClick={handleClick}
-            />
-            <StyledMenu
-              id="customized-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </StyledMenu>
-          </Toolbar>
-        </AppBar>
+        <Header />
         <main>
           {/* Hero unit */}
           <div className={classes.heroContent}>

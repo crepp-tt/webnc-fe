@@ -10,7 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import { useHistory } from 'react-router-dom';
-// import { Cookies } from 'react-cookie';
+import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import FacebookIcon from '../../icon/facebook.png';
+import GoogleIcon from '../../icon/google.png';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,6 +43,66 @@ export default function RegisterCard() {
   const [alert, setAlert] = useState(null);
   const history = useHistory();
 
+  const responseGoogle = (response) => {
+    fetch('http://localhost:3000/api/auth/logingg', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ggAccessToken: response.accessToken,
+      }),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+            console.log(data);
+            localStorage.setItem('token', data.token);
+            history.push('/boards');
+          });
+        } else if (response.status === 400) {
+          setAlert(<Alert severity="warning">Please input all fields!</Alert>);
+        } else {
+          setAlert(<Alert severity="error">Can not login!</Alert>);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const responseFacebook = (response) => {
+    console.log(response);
+    fetch('http://localhost:3000/api/auth/loginfb', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fbAccessToken: response.accessToken,
+        id: response.id,
+      }),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          response.json().then((data) => {
+            console.log(data);
+            localStorage.setItem('token', data.token);
+            history.push('/boards');
+          });
+        } else if (response.status === 400) {
+          setAlert(<Alert severity="warning">Please input all fields!</Alert>);
+        } else {
+          setAlert(<Alert severity="error">Can not login!</Alert>);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   const handleLogin = () => {
     fetch('http://localhost:3000/api/auth/login', {
       method: 'POST',
@@ -54,11 +117,10 @@ export default function RegisterCard() {
     })
       .then((response) => {
         if (response.status === 200) {
-          response
-            .json()
-            .then((data) => localStorage.setItem('token', data.token));
-          console.log(localStorage.getItem('token'));
-          history.push('/boards');
+          response.json().then((data) => {
+            localStorage.setItem('token', data.token);
+            history.push('/boards');
+          });
         } else if (response.status === 400) {
           setAlert(<Alert severity="warning">Please input all fields!</Alert>);
         } else {
@@ -108,7 +170,6 @@ export default function RegisterCard() {
             />
           </Grid>
         </Grid>
-
         <Button
           fullWidth
           variant="contained"
@@ -118,14 +179,59 @@ export default function RegisterCard() {
         >
           Login
         </Button>
-        <Button
+        {/* <Button
           fullWidth
           variant="contained"
           color="secondary"
           className={classes.submit}
         >
+          
           Google Login
-        </Button>
+        </Button> */}
+        <div
+          style={{
+            marginTop: 20,
+            display: 'flex',
+            justifyContent: 'space-around',
+          }}
+        >
+          <GoogleLogin
+            clientId="866874233194-ecep2qn31gc8ltvddh81s9nj52bpb4th.apps.googleusercontent.com"
+            onSuccess={responseGoogle}
+            // onFailure={responseGoogle}
+            cookiePolicy={'single_host_origin'}
+            className={classes.submit}
+            render={(props) => (
+              <Button
+                onClick={props.onClick}
+                variant="outlined"
+                color="secondary"
+                style={{ width: '40%', textTransform: 'none' }}
+              >
+                <img src={GoogleIcon} />
+                <span style={{ marginLeft: 5 }}>Google</span>
+              </Button>
+            )}
+          />
+
+          <FacebookLogin
+            appId="691587058431937"
+            callback={responseFacebook}
+            render={(props) => (
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={props.onClick}
+                startIcon={props.icon}
+                style={{ width: '40%', textTransform: 'none' }}
+              >
+                <img src={FacebookIcon} />
+                <span style={{ marginLeft: 5 }}>Facebook</span>
+              </Button>
+            )}
+          />
+        </div>
+
         <Grid container justify="center" style={{ marginTop: '10px' }}>
           <Grid item>
             <Link href="/register" variant="body2">

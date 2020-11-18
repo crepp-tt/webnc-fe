@@ -14,7 +14,7 @@ import AddItem from './addItem';
 import ColumnItem from './columnItem';
 import { useParams } from 'react-router';
 import { useHistory } from 'react-router-dom';
-import InputBase from '@material-ui/core/InputBase';
+import Header from '../header';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -121,18 +121,18 @@ export default function BoardDetail() {
     return item ? (
       <React.Fragment>
         <CssBaseline />
-        <AppBar position="relative">
-          <Toolbar>
-            <Typography
-              variant="h6"
-              color="inherit"
-              noWrap
-              onClick={() => history.push('/boards')}
-            >
-              Funretro
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        {localStorage.getItem('token') ? (
+          <Header />
+        ) : (
+          <AppBar position="relative">
+            <Toolbar>
+              <Button color="inherit" onClick={() => history.push('/boards')}>
+                <h3>Retro</h3>
+              </Button>
+            </Toolbar>
+          </AppBar>
+        )}
+
         <main>
           {/* Hero unit */}
           <div className={classes.heroContent}>
